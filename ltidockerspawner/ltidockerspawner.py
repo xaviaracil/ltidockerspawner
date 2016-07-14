@@ -6,7 +6,7 @@ from tornado import gen
 from traitlets import Unicode
 
 
-class LtiDockerSpawner(DockerSpawner, LTIAwareMixin):
+class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
     """
     DockerSpawner that defines notebook_dir and container_image
     from LTI (http://www.imsglobal.org/activity/learning-tools-interoperability) context
