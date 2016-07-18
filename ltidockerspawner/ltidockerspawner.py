@@ -40,7 +40,10 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
         if self.notebook_root_dir:
             volume_dir = _fmt(self.notebook_root_dir)
             context_volume = {self.provider.context_title: volume_dir}
-            extra_host_config['binds'] = self._volumes_to_binds(context_volume, extra_host_config['binds'])
+            if not extra_host_config:
+                extra_host_config = dict(binds=self._volumes_to_binds(context_volume, {}))
+            else:
+                extra_host_config['binds'] = self._volumes_to_binds(context_volume, extra_host_config['binds'])
 
         """Start the server"""
         yield super().start(image, extra_create_kwargs, extra_start_kwargs, extra_host_config)
