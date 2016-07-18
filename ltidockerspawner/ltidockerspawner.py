@@ -39,7 +39,7 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
         """Get notebook dir from LTI context"""
         if self.notebook_root_dir:
             volume_dir = _fmt(self.notebook_root_dir)
-            context_volume = {self.provider.context_title: volume_dir}
+            context_volume = {self.provider.context_label: volume_dir}
             if not extra_host_config:
                 extra_host_config = dict(binds=self._volumes_to_binds(context_volume, {}))
             else:
