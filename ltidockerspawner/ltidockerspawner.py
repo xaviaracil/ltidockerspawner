@@ -27,10 +27,19 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
               "                If not found, container_image is used as default")
     )
 
+    def _fmt(self, v):
+        return v.format(context_id=self.provider.context_id)
+
+    def get_env(self):
+        env = super().get_env()
+        if self.notebook_root_dir:
+            volume_dir = self._fmt(self.notebook_root_dir)
+            env["NOTEBOOK_DIR"] = volume_dir
+
+        return env
+
     @gen.coroutine
     def start(self, image=None, extra_create_kwargs=None, extra_start_kwargs=None, extra_host_config=None):
-        def _fmt(v):
-            return v.format(context_id=self.provider.context_id)
 
         """Get image name from LTI context"""
         if self.container_image_param_name:
@@ -38,7 +47,7 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
 
         """Get notebook dir from LTI context"""
         if self.notebook_root_dir:
-            volume_dir = _fmt(self.notebook_root_dir)
+            volume_dir = self._fmt(self.notebook_root_dir)
             context_volume = {self.provider.context_label: volume_dir}
             if not extra_host_config:
                 extra_host_config = dict(binds=self._volumes_to_binds(context_volume, {}))
