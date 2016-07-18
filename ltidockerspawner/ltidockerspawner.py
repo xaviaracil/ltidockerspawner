@@ -27,7 +27,7 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
               "                If not found, container_image is used as default")
     )
 
-    @gen.corroutine
+    @gen.coroutine
     def start(self, image=None, extra_create_kwargs=None, extra_start_kwargs=None, extra_host_config=None):
         def _fmt(v):
             return v.format(context_id=self.provider.context_id)
