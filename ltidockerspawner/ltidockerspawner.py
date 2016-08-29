@@ -34,6 +34,9 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
         env = super().get_env()
         if self.notebook_root_dir:
             volume_dir = self._fmt(self.notebook_root_dir)
+            self.log.info(
+                "notebook_root_dir present with value %s. Formatted: %s",
+                self.notebook_root_dir, volume_dir)
             env["NOTEBOOK_DIR"] = volume_dir
 
         return env
