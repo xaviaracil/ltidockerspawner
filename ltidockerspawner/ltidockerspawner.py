@@ -36,7 +36,12 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
     )
 
     def _fmt(self, v):
-        return v.format(context_id=self.provider.context_id)
+        format_args = dict(
+                context_id=self.provider.context_id,
+                codi_tercers=self.provider.get_custom_param("domain_coditercers") # UOC only
+        )
+
+        return v.format(format_args)
 
     def get_env(self):
         env = super().get_env()
