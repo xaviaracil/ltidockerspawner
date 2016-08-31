@@ -20,6 +20,13 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
               "             If not found, notebook_dir is used as default")
     )
 
+    notebooks_git_repo = Unicode(
+        '',
+        config=True,
+        allow_none=True,
+        help="URL of a git repo where find notebooks for every context."
+    )
+
     container_image_param_name = Unicode(
         os.getenv('LTI_SPAWNER_CONTAINER_IMAGE_PARAM_NAME'),
         config=True,
@@ -30,6 +37,17 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
 
     def _fmt(self, v):
         return v.format(context_id=self.provider.context_id)
+
+    def get_env(self):
+        env = super().get_env()
+        if self.notebooks_git_repo:
+            git_repo_url = self._fmt(self.notebooks_git_repo)
+            self.log.info(
+                "notebooks_git_repo present with value %s. Formatted: %s",
+                self.notebooks_git_repo, git_repo_url)
+            env["NOTEBOOK_GIT_REPO"] = git_repo_url
+
+        return env
 
     @gen.coroutine
     def start(self, image=None, extra_create_kwargs=None, extra_start_kwargs=None, extra_host_config=None):
