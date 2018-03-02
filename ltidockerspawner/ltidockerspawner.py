@@ -41,7 +41,7 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
                 codi_tercers=self.provider.get_custom_param("domain_coditercers") # UOC only
         )
 
-        return v.format(format_args)
+        return v.format(**format_args)
 
     def get_env(self):
         env = super().get_env()
