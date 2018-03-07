@@ -1,2 +1,2 @@
 dockerspawner
--e git+https://devel.elearnlab.org/elearn/ltiauthenticator.git#egg=ltiauthenticator
+git+https://devel.elearnlab.org/elearn/ltiauthenticator.git#egg=ltiauthenticator
