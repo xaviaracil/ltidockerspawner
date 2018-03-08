@@ -51,6 +51,7 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
                 "notebooks_git_repo present with value %s. Formatted: %s",
                 self.notebooks_git_repo, git_repo_url)
             env["NOTEBOOK_GIT_REPO"] = git_repo_url
+            env["NOTEBOOK_GIT_DIR"] = self.provider.get_custom_param("domain_coditercers")
 
         return env
 
