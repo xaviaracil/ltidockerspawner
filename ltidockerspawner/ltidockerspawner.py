@@ -47,13 +47,13 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
 
         return env
 
-    @gen.coroutine
-    def start(self, image=None, extra_create_kwargs=None, extra_start_kwargs=None, extra_host_config=None):
-
-        """Get image name from LTI context"""
-        if self.container_image_param_name:
-            if self.provider.get_custom_param(self.container_image_param_name):
-                image = self.provider.get_custom_param(self.container_image_param_name)
-
-        """Start the server"""
-        return super().start(image, extra_create_kwargs, extra_start_kwargs, extra_host_config)
+    # @gen.coroutine
+    # def start(self, image=None, extra_create_kwargs=None, extra_start_kwargs=None, extra_host_config=None):
+    #
+    #     """Get image name from LTI context"""
+    #     if self.container_image_param_name:
+    #         if self.provider.get_custom_param(self.container_image_param_name):
+    #             image = self.provider.get_custom_param(self.container_image_param_name)
+    #
+    #     """Start the server"""
+    #     return super().start(image, extra_create_kwargs, extra_start_kwargs, extra_host_config)
