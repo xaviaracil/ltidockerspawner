@@ -26,6 +26,10 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
               "                If not found, container_image is used as default")
     )
 
+    @property
+    def container_name(self):
+        return "{}-{}".format(super().container_name, self.provider.resource_link_id)
+
     def _fmt(self, v):
         format_args = dict(
                 context_id=self.provider.context_id,
