@@ -26,6 +26,14 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
               "                If not found, container_image is used as default")
     )
 
+    notebooks_git_repo_param_name = Unicode(
+        os.getenv('LTI_SPAWNER_GIT_REPO_PARAM_NAME'),
+        config=True,
+        allow_none=True,
+        help=("Param name in LTI context defining the git repo where the work is stored. \n"
+              "                If not found, container_image is used as default")
+    )
+
     @property
     def container_name(self):
         return "{}-{}".format(super().container_name, self.provider.resource_link_id)
@@ -40,11 +48,21 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
 
     def get_env(self):
         env = super().get_env()
+        """Get repo from lti"""
+        if self.notebooks_git_repo_param_name:
+            if self.provider.get_custom_param(self.container_image_param_name):
+                git_repo_url = self._fmt(self.provider.get_custom_param(self.container_image_param_name))
+                self.log.info(
+                    "notebooks_git_repo_param_name present with value %s. Formatted: %s",
+                    self.provider.get_custom_param(self.container_image_param_name), git_repo_url)
+
         if self.notebooks_git_repo:
             git_repo_url = self._fmt(self.notebooks_git_repo)
             self.log.info(
                 "notebooks_git_repo present with value %s. Formatted: %s",
                 self.notebooks_git_repo, git_repo_url)
+
+        if git_repo_url:
             env["NOTEBOOK_GIT_REPO"] = git_repo_url
             env["NOTEBOOK_GIT_DIR"] = self.provider.get_custom_param("domain_coditercers")
 
