@@ -41,28 +41,23 @@ class LTIDockerSpawner(DockerSpawner, LTIAwareMixin):
     def _fmt(self, v):
         format_args = dict(
                 context_id=self.provider.context_id,
+                repo_name='Jupyter',
                 codi_tercers=self.provider.get_custom_param("domain_coditercers") # UOC only
         )
+
+        if self.notebooks_git_repo_param_name:
+            if self.provider.get_custom_param(self.notebooks_git_repo_param_name):
+                format_args['repo_name'] = self.provider.get_custom_param(self.notebooks_git_repo_param_name)
 
         return v.format(**format_args)
 
     def get_env(self):
         env = super().get_env()
-        """Get repo from lti"""
-        if self.notebooks_git_repo_param_name:
-            if self.provider.get_custom_param(self.container_image_param_name):
-                git_repo_url = self._fmt(self.provider.get_custom_param(self.container_image_param_name))
-                self.log.info(
-                    "notebooks_git_repo_param_name present with value %s. Formatted: %s",
-                    self.provider.get_custom_param(self.container_image_param_name), git_repo_url)
-
         if self.notebooks_git_repo:
             git_repo_url = self._fmt(self.notebooks_git_repo)
             self.log.info(
                 "notebooks_git_repo present with value %s. Formatted: %s",
                 self.notebooks_git_repo, git_repo_url)
-
-        if git_repo_url:
             env["NOTEBOOK_GIT_REPO"] = git_repo_url
             env["NOTEBOOK_GIT_DIR"] = self.provider.get_custom_param("domain_coditercers")
 
